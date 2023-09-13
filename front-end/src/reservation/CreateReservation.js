@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
+import { createReservation } from "../utils/api";
 
 function CreateReservation () {
+const history = useHistory();
+
 const initialReservationForm = {
     first_name: "",
     last_name: "",
@@ -23,14 +26,24 @@ const handleChange = ({ target }) => {
 
 const handleSubmit = (event) => {
     event.prevenDefault();
-    
+    const abortController = new AbortController();
+    createReservation(reservation).then(() => {
+        history.push(`/dashboard?date=${reservation.reservation_date}`)
+    })
+    .catch(setError);
+    return () => abortController.abort();
+}
+
+const cancelHandler = () => {
+    history.goBack();
 }
 
 return (
 <div>
-    <form>
+    <ErrorAlert error={error} />
+    <form onSubmit={handleSubmit}>
         <label htmlFor="first_name">
-            First name
+            First name 
         </label>
         <input
             id="first_name"
@@ -40,8 +53,9 @@ return (
             value={reservation.name}
             require={true}
         />
+        <br />
         <label htmlFor="last_name">
-            Last name
+            Last name 
         </label>
         <input
             id="last_name"
@@ -51,8 +65,9 @@ return (
             value={reservation.last_name}
             require={true}
         />
+        <br />
         <label htmlFor="mobile_number">
-            Mobile number
+            Mobile number 
         </label>
         <input 
             id="mobile_number"
@@ -62,8 +77,9 @@ return (
             value={reservation.mobile_number}
             require={true}
         />
+        <br />
         <label htmlFor="reservation_date">
-            Date of reservation
+            Date of reservation 
         </label>
         <input 
             id="reservation_date"
@@ -73,8 +89,9 @@ return (
             value={reservation.reservation_date}
             require={true}
         />
+        <br />
         <label htmlFor="reservation_time">
-            Time of reservation
+            Time of reservation 
         </label>
         <input 
             id="reservation_time"
@@ -84,8 +101,9 @@ return (
             value={reservation.reservation_time}
             require={true}
         />
+        <br />
         <label htmlFor="people">
-            Number of people in the party
+            Number of people in the party 
         </label>
         <input 
             id="people"
@@ -96,6 +114,10 @@ return (
             value={reservation.people}
             require={true}
         />
+        <br />
+        <button type="submit">Submit</button>
+        <br />
+        <button type="button" onClick={cancelHandler}>Cancel</button>
     </form>
 </div>
 );
