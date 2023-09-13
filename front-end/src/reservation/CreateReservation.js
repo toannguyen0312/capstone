@@ -6,33 +6,39 @@ import { createReservation } from "../utils/api";
 function CreateReservation () {
 const history = useHistory();
 
-const initialReservationForm = {
+const [reservation, setReservation] = useState({
     first_name: "",
     last_name: "",
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
     people: "",
-};
-const [reservation, setReservation] = useState({...initialReservationForm});
+  });
+
 const [error, setError] = useState(null);
 
-const handleChange = ({ target }) => {
+const handleChange = ( { target } ) => {
     setReservation({
         ...reservation,
         [target.name]: target.value,
     });
 };
 
-const handleSubmit = (event) => {
-    event.prevenDefault();
+const handleSubmit = async (event) => {
+    event.preventDefault();
     const abortController = new AbortController();
-    createReservation(reservation).then(() => {
-        history.push(`/dashboard?date=${reservation.reservation_date}`)
-    })
-    .catch(setError);
-    return () => abortController.abort();
-}
+    try {
+      const response = await createReservation(
+        reservation,
+        abortController.signal
+      );
+      history.push(
+        `/dashboard/?date=${response.reservation_date.slice(0, 10)}`
+      );
+    } catch (error) {
+      setErrorAlert(error);
+    }
+  };
 
 const cancelHandler = () => {
     history.goBack();
@@ -41,7 +47,7 @@ const cancelHandler = () => {
 return (
 <div>
     <ErrorAlert error={error} />
-    <form onSubmit={handleSubmit}>
+    <form>
         <label htmlFor="first_name">
             First name 
         </label>
@@ -115,7 +121,7 @@ return (
             require={true}
         />
         <br />
-        <button type="submit">Submit</button>
+        <button type="submit" onClick={(event) => submitHandler(event)}>Submit</button>
         <br />
         <button type="button" onClick={cancelHandler}>Cancel</button>
     </form>
