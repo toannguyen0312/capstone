@@ -17,6 +17,9 @@ import CreateReservation from "../reservation/CreateReservation";
 function Routes() {
   return (
     <Switch>
+      <Route path="/reservations/new">
+        <CreateReservation />
+      </Route>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
       </Route>
