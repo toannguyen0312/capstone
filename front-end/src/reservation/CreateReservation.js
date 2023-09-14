@@ -12,7 +12,7 @@ const [reservation, setReservation] = useState({
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    people: "",
+    people: "1",
   });
 
 const [error, setError] = useState(null);
@@ -44,7 +44,7 @@ const handleSubmit = async (event) => {
         `/dashboard/?date=${response.reservation_date.slice(0, 10)}`
       );
     } catch (error) {
-      setErrorAlert(error);
+      setError(error);
     }
   };
 >>>>>>> d3af21898f5ac287d2280b987828649814059529
@@ -130,7 +130,7 @@ return (
             require={true}
         />
         <br />
-        <button type="submit" onClick={(event) => submitHandler(event)}>Submit</button>
+        <button type="submit" onClick={(event) => handleSubmit(event)}>Submit</button>
         <br />
         <button type="button" onClick={cancelHandler}>Cancel</button>
     </form>
