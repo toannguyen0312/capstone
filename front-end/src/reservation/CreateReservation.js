@@ -27,7 +27,7 @@ const handleChange = ({ target }) => {
 const handleSubmit = (event) => {
     event.prevenDefault();
     const abortController = new AbortController();
-    createReservation(reservation).then(() => {
+    createReservation(reservation, abortController.signal).then(() => {
         history.push(`/dashboard?date=${reservation.reservation_date}`)
     })
     .catch(setError);
