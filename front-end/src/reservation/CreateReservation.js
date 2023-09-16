@@ -18,36 +18,22 @@ const [reservation, setReservation] = useState({
 const [error, setError] = useState(null);
 
 const handleChange = ( { target } ) => {
-    setReservation({
-        ...reservation,
-        [target.name]: target.value,
-    });
+    setReservation((previousReservation) => ({
+      ...previousReservation,
+      [target.name]: target.value,
+    }))
 };
 
 const handleSubmit = async (event) => {
-    event.preventDefault();
+  event.preventDefault();
+  try {
     const abortController = new AbortController();
-<<<<<<< HEAD
-    createReservation(reservation, abortController.signal).then(() => {
-        history.push(`/dashboard?date=${reservation.reservation_date}`)
-    })
-    .catch(setError);
-    return () => abortController.abort();
-}
-=======
-    try {
-      const response = await createReservation(
-        reservation,
-        abortController.signal
-      );
-      history.push(
-        `/dashboard/?date=${response.reservation_date.slice(0, 10)}`
-      );
-    } catch (error) {
-      setError(error);
-    }
-  };
->>>>>>> d3af21898f5ac287d2280b987828649814059529
+    await createReservation(reservation, abortController.signal);
+    history.push(`/dashboard?date=${reservation.reservation_date}`);
+  } catch (error) {
+    setError(error.message);
+  }
+};
 
 const cancelHandler = () => {
     history.goBack();
@@ -56,7 +42,7 @@ const cancelHandler = () => {
 return (
 <div>
     <ErrorAlert error={error} />
-    <form>
+    <form onSubmit={handleSubmit}>
         <label htmlFor="first_name">
             First name 
         </label>
@@ -65,8 +51,8 @@ return (
             name="first_name"
             type="text"
             onChange={handleChange}
-            value={reservation.name}
-            require={true}
+            value={reservation.first_name}
+            required={true}
         />
         <br />
         <label htmlFor="last_name">
@@ -78,7 +64,7 @@ return (
             type="text"
             onChange={handleChange}
             value={reservation.last_name}
-            require={true}
+            required={true}
         />
         <br />
         <label htmlFor="mobile_number">
@@ -90,7 +76,7 @@ return (
             type="number"
             onChange={handleChange}
             value={reservation.mobile_number}
-            require={true}
+            required={true}
         />
         <br />
         <label htmlFor="reservation_date">
@@ -102,7 +88,7 @@ return (
             type="date"
             onChange={handleChange}
             value={reservation.reservation_date}
-            require={true}
+            required={true}
         />
         <br />
         <label htmlFor="reservation_time">
@@ -114,7 +100,7 @@ return (
             type="time"
             onChange={handleChange}
             value={reservation.reservation_time}
-            require={true}
+            required={true}
         />
         <br />
         <label htmlFor="people">
@@ -127,10 +113,10 @@ return (
             min="1"
             onChange={handleChange}
             value={reservation.people}
-            require={true}
+            required={true}
         />
         <br />
-        <button type="submit" onClick={(event) => handleSubmit(event)}>Submit</button>
+        <button type="submit">Submit</button>
         <br />
         <button type="button" onClick={cancelHandler}>Cancel</button>
     </form>

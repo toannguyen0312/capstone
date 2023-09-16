@@ -3,6 +3,7 @@ import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { Link } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
+import ListReservations from "./ListReservations";
 
 /**
  * Defines the dashboard page.
@@ -46,6 +47,7 @@ function Dashboard({ date }) {
         </Link>
       </div>
       <ErrorAlert error={reservationsError} />
+      <ListReservations reservations={reservations}/>
       {JSON.stringify(reservations)}
     </main>
   );
