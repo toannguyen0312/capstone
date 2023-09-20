@@ -24,16 +24,17 @@ const handleChange = ( { target } ) => {
     }))
 };
 
-const handleSubmit = async (event) => {
+function handleSubmit(event) {
   event.preventDefault();
-  try {
-    const abortController = new AbortController();
-    await createReservation(reservation, abortController.signal);
-    history.push(`/dashboard?date=${reservation.reservation_date}`);
-  } catch (error) {
-    setError(error.message);
-  }
-};
+  const abortController = new AbortController();
+  setError(null);
+  createReservation(reservation, abortController.signal)
+    .then(() =>
+      history.push(`/dashboard?date=${reservation.reservation_date}`)
+    )
+    .catch(setError);
+  return () => abortController.abort();
+}
 
 const cancelHandler = () => {
     history.goBack();
