@@ -24,17 +24,21 @@ const handleChange = ( { target } ) => {
     }))
 };
 
-function handleSubmit(event) {
-  event.preventDefault();
-  const abortController = new AbortController();
-  setError(null);
-  createReservation(reservation, abortController.signal)
-    .then(() =>
-      history.push(`/dashboard?date=${reservation.reservation_date}`)
-    )
-    .catch(setError);
-  return () => abortController.abort();
-}
+const handleSubmit = async (event) => {
+    event.preventDefault();
+    const abortController = new AbortController();
+    try {
+      const response = await createReservation(
+        reservation,
+        abortController.signal
+      );
+      history.push(
+        `/dashboard/?date=${response.reservation_date.slice(0, 10)}`
+      );
+    } catch (error) {
+      setError(error);
+    }
+  };
 
 const cancelHandler = () => {
     history.goBack();
