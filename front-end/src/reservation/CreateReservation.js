@@ -33,7 +33,7 @@ const handleSubmit = async (event) => {
         abortController.signal
       );
       history.push(
-        `/dashboard/?date=${response.reservation_date.slice(0, 10)}`
+        `/dashboard?date=${response.reservation_date.slice(0, 10)}`
       );
     } catch (error) {
       setError(error);

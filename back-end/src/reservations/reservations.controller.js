@@ -79,10 +79,10 @@ function timeIsValid(req, res, next) {
 }
 
 async function create(req, res) {
-  const newReservation = await service.create(req.body.data);
+  const newReservation = await service.create(...req.body.data);
 
   res.status(201).json({
-    data: newObservation,
+    data: newReservation,
   })
 }
 
